@@ -1,13 +1,13 @@
 {
   "name": "lighthouse-report-generator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Group all of your lighthouse reports into a single .csv file",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "bin": {
-    "lighthouse-report-generator": "./main.js"
+    "lighthouse-report-generator": "./index.js"
   },
   "author": "rosbel",
   "license": "MIT",
