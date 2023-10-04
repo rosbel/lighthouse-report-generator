@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 
-const fs = require("fs").promises;
-const path = require("path");
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
-const program = require("commander");
+import { promises as fs } from 'fs';
+import path from 'path';
+import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
+import { Command } from 'commander';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const pacakageJson = await readJSON(path.join(__dirname, "package.json"));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const program = new Command();
+
+const packageJson = await readJSON(path.join(__dirname, "package.json"));
 
 const INTERESTING_AUDITS = {
   FCP: { path: "first-contentful-paint" },
@@ -97,12 +104,17 @@ async function processRoot(rootPath) {
     }
   }
 
-  const csvWriter = createCsvWriter({ path: "./results.csv", header });
+  if (results.length === 0) {
+    console.log('No lighthouse manifest.json or report.json files found. No results.');
+    return;
+  }
+
+  const csvWriter = createCsvWriter({ path: './results.csv', header });
   try {
     await csvWriter.writeRecords(results);
-    console.log("Finished processing folders, results written to results.csv");
+    console.log('Finished processing folders, results written to results.csv');
   } catch (error) {
-    console.error("Error writing to CSV:", error);
+    console.error('Error writing to CSV:', error);
   }
 }
 
