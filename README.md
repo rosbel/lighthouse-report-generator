@@ -1,20 +1,82 @@
 # Lighthouse Report Generator
 
-Generate aggregated CSV reports from your Lighthouse audit files.
-
-This tool is designed to process a directory of Lighthouse performance reports, extracting specific metrics, and then saving those metrics into a consolidated CSV file.
+The Lighthouse Report Generator enables you to aggregate key metrics from Lighthouse performance reports and consolidate them into a CSV file. It's designed to work seamlessly with Lighthouse and `@lhci/cli` to streamline the process of comparing performance data across multiple environments.
 
 ## Table of Contents
 
-- [Installation](#installation)
 - [Usage](#usage)
+  - [Collecting Metrics](#collecting-metrics)
+  - [Generating the CSV Report](#generating-the-csv-report)
 - [Features](#features)
 - [Contribution](#contribution)
 - [License](#license)
+- [Development](#development)
+  - [Installation](#installation)
 
-## Installation
+## Usage
 
-1. First, clone the `lighthouse-report-generator` repository:
+### Collecting Metrics
+
+To begin, you'll need Lighthouse reports in JSON format, which can be generated using the Lighthouse CLI.
+
+Start by collecting baseline metrics. By default, this command will run three Lighthouse audits:
+
+```bash
+npx -p @lhci/cli lhci collect --url <url>
+```
+
+Next, save your baseline results to a folder, naming it `baseline` or another descriptive name:
+
+```bash
+npx -p @lhci/cli lhci upload --target filesystem --outputDir=./<folderName>
+```
+
+To compare multiple environments or pages, simply repeat the process for each URL you want to evaluate:
+
+```bash
+npx -p @lhci/cli lhci collect --url <new_url>
+npx -p @lhci/cli lhci upload --target filesystem --outputDir=./<folderNameForComparison>
+```
+
+You can repeat this process as many times as needed, creating separate folders for each environment or page comparison.
+
+### Generating the CSV Report
+
+Once you've gathered the metrics, use the following command to generate a CSV report consolidating the data:
+
+```bash
+npx lighthouse-report-generator -f <folderPath>
+```
+
+If no `folderPath` is provided, it will default to the current directory:
+
+```bash
+npx lighthouse-report-generator
+```
+
+As long as the directory contains a valid `manifest.json` and associated Lighthouse report files, a `results.csv` file will be generated, summarizing the key metrics.
+
+## Features
+
+- Processes individual or multiple Lighthouse reports from a specified folder.
+- Produces a consolidated CSV file with aggregated metrics.
+- Ensures data validity before generating the CSV.
+
+## Contribution
+
+We welcome contributions! If you'd like to contribute, feel free to fork the repository and submit a pull request, or open an issue if you have suggestions or discover bugs.
+
+## License
+
+This project is open-source and is licensed under the [MIT License](LICENSE).
+
+## Development
+
+For those interested in contributing or making modifications, follow these steps to set up your local environment:
+
+### Installation
+
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/rosbel/lighthouse-report-generator.git
@@ -26,38 +88,14 @@ This tool is designed to process a directory of Lighthouse performance reports, 
    cd lighthouse-report-generator
    ```
 
-3. Install the necessary dependencies:
+3. Install the required dependencies:
 
    ```bash
    npm install
    ```
 
-## Usage
+Once setup is complete, you're ready to start contributing or modifying the tool.
 
-To use the tool:
+---
 
-```bash
-npx lighthouse-report-generator -f <folderPath>
-```
-
-If you don't specify a `folderPath`, it will default to the current directory:
-
-```bash
-npx lighthouse-report-generator
-```
-
-After execution, if there is a valid `manifest.json` and Lighthouse report files are found in the specified directory or its subdirectories, a `results.csv` file will be generated in the current directory containing the aggregated metrics.
-
-## Features
-
-- Processes individual Lighthouse reports or a folder containing multiple reports.
-- Generates a comprehensive CSV with aggregated metrics.
-- Ensures valid data presence before generating the CSV.
-
-## Contribution
-
-Contributions are welcome! Please fork this repository and open a pull request with your changes, or open an issue if you have suggestions or find a bug.
-
-## License
-
-This project is open-source and available under the [MIT License](LICENSE).
+This version strikes a balance between professionalism and approachability. Let me know if this works for you!
